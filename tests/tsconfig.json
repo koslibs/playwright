@@ -1,4 +1,7 @@
 {
     "extends": "../tsconfig.json",
-    "include": ["*.types.ts", "browser/*.ts"]
+    "include": ["*.types.ts", "browser/*.ts"],
+    "compilerOptions": {
+        "resolveJsonModule": true
+    }
 }

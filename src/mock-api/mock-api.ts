@@ -18,13 +18,27 @@ type TransportOptions<T extends ApiMethod> = undefined extends Parameters<T>[1]
     ? { transport?: Parameters<T>[1] }
     : { transport: Parameters<T>[1] };
 
+type IsUnion<T, Whole = T> = T extends unknown ? ([Whole] extends [T] ? false : true) : never;
+
+// JSON imports widen strings. Only relax unions of multiple string members.
+type MockResponse<T> =
+    true extends IsUnion<Extract<T, string>>
+        ? string | MockResponse<Exclude<T, string>>
+        : T extends string | number | bigint | boolean | symbol | null | undefined
+          ? T
+          : T extends (...args: never[]) => unknown
+            ? T
+            : T extends object
+              ? { [Key in keyof T]: MockResponse<T[Key]> }
+              : T;
+
 export type MockOptions<T extends ApiMethod> = {
     params: Parameters<T>[0];
     delay?: number;
 } & TransportOptions<T> &
     (
         | {
-              response: Awaited<ReturnType<T>>['data'];
+              response: MockResponse<Awaited<ReturnType<T>>['data']>;
               status?: 200 | 201 | 202 | 204;
           }
         | {

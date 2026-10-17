@@ -90,6 +90,23 @@ inferred from the method. Query matching permits extra parameters; method, origi
 path and declared headers must match. JSON bodies are compared structurally;
 string bodies are compared verbatim. Multipart contents are not compared.
 
+Imported JSON responses are accepted without casts when API response fields use
+unions of multiple string literals, such as `'teal' | 'web-orange'`. These unions
+accept `string` recursively in objects, arrays and tuples, including nullable
+fields. This only affects successful mock response types. Request parameters and
+transport options remain strict, as do response structure, numeric and boolean
+types and single string literals. Allowed string-union values are not validated;
+any string is accepted. No runtime schema validation or generated declarations
+are involved.
+
+For ESM tests, import real JSON files using Node.js's JSON import attribute:
+
+```ts
+import profile from './mock/profile.json' with { type: 'json' };
+
+await mockApi(profilesApi.getCurrentProfile, { params: {}, response: profile });
+```
+
 The newest matching registration wins and remains available for repeated calls:
 
 ```ts
