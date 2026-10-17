@@ -1,0 +1,15 @@
+{
+    "name": "JSON profile",
+    "avatar": "web-orange",
+    "status": "active",
+    "counters": {
+        "hands": 42
+    },
+    "history": [
+        {
+            "state": "completed",
+            "attempts": 1
+        }
+    ],
+    "enabled": true
+}
