@@ -1,0 +1,71 @@
+{
+    "name": "@koslibs/playwright",
+    "version": "0.0.0",
+    "description": "Independent Playwright runner, configuration and typed API mocks",
+    "type": "module",
+    "license": "MIT",
+    "author": "holypower777",
+    "engines": {
+        "node": ">=24.13.0"
+    },
+    "repository": {
+        "type": "git",
+        "url": "git+https://github.com/koslibs/playwright.git"
+    },
+    "publishConfig": {
+        "access": "public"
+    },
+    "sideEffects": false,
+    "main": "./dist/index.js",
+    "types": "./dist/index.d.ts",
+    "exports": {
+        ".": {
+            "types": "./dist/index.d.ts",
+            "import": "./dist/index.js"
+        },
+        "./mock-api": {
+            "types": "./dist/mock-api/index.d.ts",
+            "import": "./dist/mock-api/index.js"
+        },
+        "./package.json": "./package.json"
+    },
+    "bin": {
+        "koslibs-playwright": "./bin/playwright.js"
+    },
+    "files": [
+        "dist",
+        "bin",
+        "README.md",
+        "LICENSE"
+    ],
+    "scripts": {
+        "build": "koslibs-builder lib:build",
+        "typecheck": "koslibs-builder lib:typecheck",
+        "pretest": "npm run build",
+        "test": "node --test tests/*.test.mjs && npm run test:types && npm run test:e2e",
+        "test:types": "koslibs-builder lib:typecheck --root ./tests",
+        "test:e2e": "node bin/playwright.js test",
+        "lint": "koslibs-lint lint",
+        "lint:fix": "koslibs-lint lint:fix",
+        "prepack": "npm run build",
+        "prepare": "koslibs-release hooks:install",
+        "changeset": "koslibs-release add",
+        "changeset:check": "koslibs-release check",
+        "version-package": "koslibs-release version",
+        "release": "koslibs-release publish"
+    },
+    "prettier": "@koslibs/configs/prettier",
+    "commitlint": {
+        "extends": [
+            "@koslibs/configs/commitlint"
+        ]
+    },
+    "dependencies": {
+        "@playwright/test": "1.64.1"
+    },
+    "devDependencies": {
+        "@koslibs/builder": "^2.0.0",
+        "@koslibs/configs": "^2.0.0",
+        "@types/node": "24.19.1"
+    }
+}

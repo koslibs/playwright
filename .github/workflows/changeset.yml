@@ -1,0 +1,12 @@
+name: Changeset
+
+on:
+    pull_request:
+        branches: [main]
+
+permissions:
+    contents: read
+
+jobs:
+    changeset:
+        uses: koslibs/configs/.github/workflows/changeset-check.yml@v2.0.0

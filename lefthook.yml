@@ -1,0 +1,4 @@
+extends:
+    - ./node_modules/@koslibs/configs/lefthook/index.yml
+
+lefthook: node "node_modules/@koslibs/configs/cli/release.js" hooks:run
