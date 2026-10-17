@@ -1,6 +1,6 @@
 {
     "name": "@koslibs/playwright",
-    "version": "1.0.0",
+    "version": "1.0.1",
     "description": "Independent Playwright runner, configuration and typed API mocks",
     "type": "module",
     "license": "MIT",

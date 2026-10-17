@@ -1,5 +1,11 @@
 # @koslibs/playwright
 
+## 1.0.1
+
+### Patch Changes
+
+- [#3](https://github.com/koslibs/playwright/pull/3) [`ffd8cc4`](https://github.com/koslibs/playwright/commit/ffd8cc48d438c3086ee0a77354b5a7255307c0de) Thanks [@holypower777](https://github.com/holypower777)! - Accept imported JSON mock responses by recursively allowing string values for response unions of multiple string literals. Preserve response structure, single literals, numeric and boolean types, request parameters and transport options. No casts or generated fixture declarations are required.
+
 ## 1.0.0
 
 ### Major Changes
