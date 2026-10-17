@@ -1,0 +1,15 @@
+# @koslibs/playwright
+
+## 1.0.0
+
+### Major Changes
+
+- [`f834ae7`](https://github.com/koslibs/playwright/commit/f834ae7f6f32c3838fee66f1be93849fa8600d59) Thanks [@holypower777](https://github.com/holypower777)! - Introduce the independent Playwright CLI, test/configuration exports and typed API-mocking fixture. Browser tests have no runtime dependency on builder, API clients, Wails or application-specific data.
+
+    Use @koslibs/builder 2 and @koslibs/configs 2 as development tooling, with @koslibs/builder as a development dependency for the Node.js library build, declarations, type checks and prepack. Default the shared Playwright configuration to the data-test-id attribute used by @koslibs/components.
+
+### Patch Changes
+
+- [#2](https://github.com/koslibs/playwright/pull/2) [`7a31a7a`](https://github.com/koslibs/playwright/commit/7a31a7a7cac7a24adc6ea2e04c445d39ddccd09c) Thanks [@holypower777](https://github.com/holypower777)! - Start the shared release workflow automatically on pushes and merges to main, matching the other koslibs packages. Keep manual runs available and skip automatic runs for release commits from github-actions[bot].
+
+- [#1](https://github.com/koslibs/playwright/pull/1) [`10cac9b`](https://github.com/koslibs/playwright/commit/10cac9b463986538a1649c8716c105f9005892b9) Thanks [@holypower777](https://github.com/holypower777)! - Document how to check the package-owned Playwright version with koslibs-playwright --version.
