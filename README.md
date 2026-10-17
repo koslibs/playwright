@@ -21,6 +21,7 @@ Expose the package-owned CLI in the consuming project's package.json:
 ```
 
 The CLI forwards all arguments and exit codes to the installed Playwright runner.
+Run `koslibs-playwright --version` to check which Playwright version the project uses.
 Use `koslibs-playwright install webkit` to install a browser or `koslibs-playwright
 show-report` to open its report. Install browsers explicitly in CI as well.
 
