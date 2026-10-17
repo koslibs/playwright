@@ -130,11 +130,13 @@ Consumers install only the Playwright runtime dependencies.
 
 Run `npm ci`, `npm run build`, `npm run typecheck`, `npm test`, and `npm run lint`.
 Run `node bin/playwright.js install webkit` before browser tests on a new machine.
-Changesets and release commands use @koslibs/configs. Publishing requires an explicit
-release command or manually triggered release workflow; no release occurs on push.
+Changesets and release commands use @koslibs/configs. Pushing or merging to main
+automatically starts the Release workflow. It uses the reusable configs v2.0.0
+workflow and installs WebKit before validation, then applies Changesets, commits
+the version and changelog, publishes to npm and pushes the release tags.
 
-After merging to main, run the Release workflow manually. It uses the reusable
-configs v2.0.0 workflow and installs WebKit before validation. Changesets prepares
-the initial 1.0.0 version from the pending major changeset; do not pre-bump the
-package version before running this workflow. The CLI release commands remain
-available for a manual local release.
+Release commits from github-actions[bot] do not start another automatic release.
+The workflow can also be started manually with Run workflow, including for a retry.
+Changesets prepares the initial 1.0.0 version from the pending major changeset;
+do not pre-bump the package version. The CLI release commands remain available
+for a manual local release.
