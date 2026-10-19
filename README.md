@@ -53,6 +53,25 @@ Override `use.testIdAttribute` when a consuming project uses another attribute.
 The consuming project explicitly owns its server command, URL and browser selection.
 For plain browser tests import `test` and `expect` from `@koslibs/playwright`.
 
+## Collection test IDs
+
+The page fixture from either @koslibs/playwright or @koslibs/playwright/mock-api
+includes getAllByTestId. It returns a live Playwright Locator, so assertions retry
+until the expected elements appear:
+
+```ts
+await expect(page.getAllByTestId('profile-loading-card')).toHaveCount(3);
+await expect(page.getAllByTestId('profile-card').nth(0)).toBeVisible();
+```
+
+This is an alias of page.getByTestId, which already matches collections. It
+accepts strings and RegExp, defaults to data-test-id through the shared config,
+and follows use.testIdAttribute overrides. It does not create an array or query
+the DOM until a locator operation or assertion runs. The exported TestPage type
+includes the method for typed helpers; the Page export stays native. The alias
+is provided on the test's page fixture; manually created browser/context pages
+retain the native Playwright API.
+
 ## API mocks
 
 Use the opt-in fixture entrypoint when every API request must be mocked:
@@ -78,8 +97,11 @@ test('opens profiles', async ({ page, mockApi }) => {
 `apiURL` is required and accepts the same glob, RegExp or URL predicate as
 BrowserContext.route. It defines the API boundary: requests matching it are
 intercepted, while frontend assets stay on their ordinary transport. Unregistered
-requests inside that boundary are aborted and fail the test at fixture teardown.
-The fixture blocks service workers and remains active until context disposal.
+requests inside that boundary are aborted silently: they do not reach the real
+backend and do not fail the test at teardown. Only register responses needed by
+the scenario being tested. The fixture blocks service workers and remains active
+until context disposal. When using installMockApi directly, unexpectedRequests
+remains available for optional diagnostics; the fixture does not assert on it.
 
 The API method must expose `describeRequest(params, transport?)`, returning
 `{ url, method, body?, headers }`. Methods from @koslibs/api 1.0.0 or newer satisfy this contract structurally. The fixture never calls the
