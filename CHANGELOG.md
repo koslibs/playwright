@@ -1,5 +1,13 @@
 # @koslibs/playwright
 
+## 1.1.0
+
+### Minor Changes
+
+- [#4](https://github.com/koslibs/playwright/pull/4) [`decec5d`](https://github.com/koslibs/playwright/commit/decec5db1200a46c5e3797531afd406f62a70077) Thanks [@holypower777](https://github.com/holypower777)! - Ignore API requests without matching mocks by default instead of failing tests at fixture teardown. Unmatched requests remain aborted without contacting the real backend; registered mocks and optional installMockApi diagnostics are unchanged.
+
+    Add page.getAllByTestId to plain and API-mocking test fixtures. It returns a live Locator, uses the configured test ID attribute and retains Playwright assertion retries, filtering and nth selection.
+
 ## 1.0.1
 
 ### Patch Changes
