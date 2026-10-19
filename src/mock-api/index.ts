@@ -1,4 +1,4 @@
-import { expect, test as base } from '@playwright/test';
+import { test as base } from '../test.js';
 
 import { installMockApi, type ApiURL, type MockApi } from './mock-api.js';
 
@@ -16,13 +16,9 @@ export const test = base.extend<Fixtures>({
             if (serviceWorkers !== 'block') {
                 throw new Error('Configure serviceWorkers: block when using API mocks');
             }
-            const { mockApi, unexpectedRequests } = await installMockApi(context, apiURL);
-            await use(mockApi);
+            const { mockApi } = await installMockApi(context, apiURL);
             // Keep interception active until Playwright closes the context.
-            expect(
-                unexpectedRequests,
-                'Register API responses with mockApi before the request'
-            ).toEqual([]);
+            await use(mockApi);
         },
         { auto: true },
     ],

@@ -109,3 +109,50 @@ test('blocks unexpected methods, bodies and headers', async ({ browser }) => {
         await context.close();
     }
 });
+
+test.describe('unregistered API requests', () => {
+    test.use({ apiURL: 'http://127.0.0.1:6128/api/**' });
+
+    test('ignores unmocked requests without failing teardown or reaching the backend', async ({
+        page,
+        mockApi,
+    }) => {
+        const localRead = Object.assign(
+            async (_params: { id: number }) => ({ data: { name: '' } }),
+            {
+                describeRequest: ({ id }: { id: number }) => ({
+                    url: `http://127.0.0.1:6128/api/items/${id}`,
+                    method: 'GET',
+                    headers: {},
+                }),
+            }
+        );
+        await mockApi(localRead, { params: { id: 1 }, response: { name: 'mocked' } });
+        await page.goto('/');
+
+        const results = await page.evaluate(async () => {
+            const send = async (path: string, method = 'GET') =>
+                fetch(path, { method })
+                    .then(async (response) => ({
+                        status: response.status,
+                        body: await response.text(),
+                    }))
+                    .catch(() => null);
+            return [
+                await send('/api/unregistered'),
+                await send('/api/unregistered', 'POST'),
+                await send('/api/items/1'),
+                await send('/api/unregistered-again'),
+            ];
+        });
+
+        // The real local server returns HTML for every URL. A passthrough would
+        // yield a response here instead of null, so this also checks isolation.
+        expect(results).toEqual([
+            null,
+            null,
+            { status: 200, body: JSON.stringify({ name: 'mocked' }) },
+            null,
+        ]);
+    });
+});
