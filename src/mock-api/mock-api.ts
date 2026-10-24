@@ -282,8 +282,14 @@ export const installMockApi = async (context: BrowserContext, apiURL: ApiURL) =>
             try {
                 const send = await held.promise;
                 if (!send || cancelled || request.failure() || page?.isClosed()) {
-                    // Complete Playwright's route lifecycle even when the browser request is gone.
-                    await route.abort('aborted');
+                    if (request.failure() || page?.isClosed()) {
+                        // The browser has already ended this request. Finish local route handling
+                        // without sending another command to a potentially destroyed popup target.
+                        await route.fallback();
+                    } else {
+                        // Disposal must still cancel requests whose browser target is alive.
+                        await route.abort('aborted');
+                    }
                     return;
                 }
                 await route.fulfill({

@@ -12,6 +12,8 @@
 
 ### Patch Changes
 
+- Complete cancelled manual routes without aborting an already destroyed popup
+  target, avoiding teardown errors in Linux WebKit.
 - Update the development dependencies `@koslibs/builder` and `@koslibs/configs`
   to `^3.0.0`. Replace the vulnerable Happy DOM toolchain with jsdom and refresh
   the lockfile to retain the patched `fast-uri` dependency.
