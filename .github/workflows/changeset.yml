@@ -9,4 +9,4 @@ permissions:
 
 jobs:
     changeset:
-        uses: koslibs/configs/.github/workflows/changeset-check.yml@v2.0.0
+        uses: koslibs/configs/.github/workflows/changeset-check.yml@v3.0.0

@@ -16,9 +16,13 @@ export const test = base.extend<Fixtures>({
             if (serviceWorkers !== 'block') {
                 throw new Error('Configure serviceWorkers: block when using API mocks');
             }
-            const { mockApi } = await installMockApi(context, apiURL);
+            const { mockApi, dispose } = await installMockApi(context, apiURL);
             // Keep interception active until Playwright closes the context.
-            await use(mockApi);
+            try {
+                await use(mockApi);
+            } finally {
+                dispose();
+            }
         },
         { auto: true },
     ],
@@ -30,5 +34,6 @@ export {
     type ApiRequestDescription,
     type ApiURL,
     type MockApi,
+    type ManualMockController,
     type MockOptions,
 } from './mock-api.js';

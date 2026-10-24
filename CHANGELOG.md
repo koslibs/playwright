@@ -1,5 +1,21 @@
 # @koslibs/playwright
 
+## Unreleased
+
+### Minor Changes
+
+- Add `delay: 'manual'` with an exported `ManualMockController`: wait for the first
+  matching request and release all current and future responses independently per
+  registration. Preserve ordinary/numeric return types and infer a union for
+  dynamic delays. Add bounded arrival waits, request cancellation and automatic
+  fixture/context cleanup without delivering held success responses.
+
+### Patch Changes
+
+- Update the development dependencies `@koslibs/builder` and `@koslibs/configs`
+  to `^3.0.0`. Replace the vulnerable Happy DOM toolchain with jsdom and refresh
+  the lockfile to retain the patched `fast-uri` dependency.
+
 ## 1.0.1
 
 ### Patch Changes
