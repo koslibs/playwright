@@ -18,6 +18,16 @@
   to `^3.0.0`. Replace the vulnerable Happy DOM toolchain with jsdom and refresh
   the lockfile to retain the patched `fast-uri` dependency.
 
+## 1.2.0
+
+### Minor Changes
+
+- [#5](https://github.com/koslibs/playwright/pull/5) [`272eb57`](https://github.com/koslibs/playwright/commit/272eb571038c732afdca142bfaf2ccf9612fd66c) Thanks [@holypower777](https://github.com/holypower777)! - Add delay: 'manual' and export ManualMockController. waitForRequest observes the first matching request with a configurable positive finite timeout (5000 ms by default); release opens all current and future responses for this registration. Preserve ordinary and numeric-delay return types, request matching and JSON typing, and infer a union for dynamic delays. Keep held responses bound to their original registration and clean up cancelled requests, fixture waits and closed contexts without delivering prepared successes.
+
+    Update the development dependencies @koslibs/builder and @koslibs/configs to ^3.0.0, replacing the vulnerable Happy DOM toolchain with jsdom. Refresh the lockfile with patched transitive dependencies and align reusable configs workflows with v3.0.0.
+
+    Complete cancelled manual routes without aborting an already destroyed popup target, avoiding teardown errors in Linux WebKit while still aborting live requests during disposal.
+
 ## 1.1.0
 
 ### Minor Changes
