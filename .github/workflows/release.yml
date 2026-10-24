@@ -12,7 +12,7 @@ permissions:
 jobs:
     release:
         if: github.actor != 'github-actions[bot]' || github.event_name == 'workflow_dispatch'
-        uses: koslibs/configs/.github/workflows/npm-release.yml@v2.0.0
+        uses: koslibs/configs/.github/workflows/npm-release.yml@v3.0.0
         with:
             before-validation-command: node bin/playwright.js install --with-deps webkit
         secrets:

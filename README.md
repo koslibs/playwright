@@ -145,6 +145,71 @@ await mockApi(profilesApi.getProfiles, {
 });
 ```
 
+For loading-state assertions, use `delay: 'manual'` to hold the response until
+the test explicitly releases it:
+
+```ts
+import target from './mock/set-current-profile-target-200.json' with { type: 'json' };
+
+test('blocks selection while switching profiles', async ({ page, mockApi }) => {
+    const switching = await mockApi(profilesApi.setCurrentProfile, {
+        params: { id: target.profileId },
+        response: target,
+        delay: 'manual',
+    });
+
+    await page.goto('/profiles');
+    await page.getByRole('button', { name: target.name }).click();
+    await switching.waitForRequest();
+
+    await expect(page.getByTestId('profile-switcher-button')).toBeDisabled();
+
+    switching.release();
+
+    await expect(page.getByTestId('profile-switcher-button')).toHaveText(target.name);
+});
+```
+
+The application supplies the API method, JSON and UI locators in this example.
+Manual registration completes immediately and returns the exported
+`ManualMockController` type:
+
+```ts
+type ManualMockController = {
+    waitForRequest: (options?: { timeout?: number }) => Promise<void>;
+    release: VoidFunction;
+};
+```
+
+`waitForRequest()` observes the first matching request reaching this registration.
+It works before or after arrival, supports concurrent/repeated waits, and never
+releases a response. Preflights, unmatched requests and other registrations do not
+count. The default timeout is `5000` ms; only finite positive numbers are accepted.
+A timeout rejects with the method, URL and duration. It leaves the registration
+paused, so a later request can be observed with another call.
+
+`release()` synchronously opens all held and future responses for this registration.
+It returns `void`, is safe before arrival and on repeated calls, and does not wait
+for rendering or response delivery. Use Playwright assertions for the resulting UI.
+Create a new registration for another pause. Controllers are independent; a newer
+registration only changes future request matching. Already held requests retain
+their original response and controller. Error statuses and bodyless `204` responses
+work in manual mode too.
+
+Aborting one request keeps other responses paused. The cancelled request never
+receives a later successful response. Closing its page cancels its held responses;
+fixture teardown or context closure clears waits, timers and listeners without
+delivering a prepared success. Closing a context before arrival rejects pending
+and future `waitForRequest()` calls. Late `release()` calls are safe. Direct
+`installMockApi(context, apiURL)` usage has the same context-close cleanup; its
+returned `dispose()` can also end the mock lifecycle while the context is open,
+aborting held requests and keeping subsequent API traffic blocked.
+
+Calls without `delay`, or with a numeric delay, still return `Promise<void>`.
+Literal `'manual'` calls return `Promise<ManualMockController>`; a dynamic
+`number | 'manual'` returns `Promise<void | ManualMockController>` and must be
+narrowed before accessing the controller.
+
 Each test has an isolated registry. Application defaults, authentication bindings,
 Wails stubs, factories and mutation state belong in the application's own fixtures.
 Use an automatic application fixture depending on mockApi to register startup
@@ -163,14 +228,14 @@ responses before each test, then export the extended test to application specs.
 
 ## Development and release
 
-@koslibs/builder 2 and @koslibs/configs 2 are development dependencies. The builder builds the Node.js ESM library
+@koslibs/builder 3 and @koslibs/configs 3 are development dependencies. The builder builds the Node.js ESM library
 and declarations and checks source and test types. `prepack` runs the same build.
 Consumers install only the Playwright runtime dependencies.
 
 Run `npm ci`, `npm run build`, `npm run typecheck`, `npm test`, and `npm run lint`.
 Run `node bin/playwright.js install webkit` before browser tests on a new machine.
 Changesets and release commands use @koslibs/configs. Pushing or merging to main
-automatically starts the Release workflow. It uses the reusable configs v2.0.0
+automatically starts the Release workflow. It uses the reusable configs v3.0.0
 workflow and installs WebKit before validation, then applies Changesets, commits
 the version and changelog, publishes to npm and pushes the release tags.
 

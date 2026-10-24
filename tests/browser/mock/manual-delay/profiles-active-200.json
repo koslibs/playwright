@@ -1,0 +1,10 @@
+[
+    {
+        "name": "Hero",
+        "avatar": "teal",
+        "status": "active",
+        "counters": { "hands": 42 },
+        "history": [{ "state": "completed", "attempts": 1 }],
+        "enabled": true
+    }
+]
